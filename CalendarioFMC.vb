@@ -54,7 +54,38 @@
         Return Me.errorFMC
     End Function
 
-   
+    Public Function CreaBotonAtras(ByRef bo As Object) As String
+        'pre: este codigo se pone en el page.load
+        'post: si es un boton bo lo convierte en un boton que recupera la pagina anterior
+
+        If compruebaEsObjetoButton(bo) Then
+            ' Dim b As New Button
+            bo.Text = "Atras"
+            bo.UseSubmitBehavior = "False"
+            bo.OnClientClick = "window.history.back(1); return false"
+        Else
+            Me.errorFMC = "no es un boton lo que has pasado"
+        End If
+        Return Me.errorFMC
+    End Function
+
+    Public Function CreaBotonAtras(ByRef bo As Object, text As String) As String
+        'pre: 
+        'post: si es un boton bo lo convierte en un boton que recupera la pagina anterior
+
+        If compruebaEsObjetoButton(bo) Then
+            ' Dim b As New Button
+            bo.Text = text
+            bo.UseSubmitBehavior = "False"
+            bo.OnClientClick = "window.history.back(1); return false"
+
+        Else
+
+            Me.errorFMC = "no es un boton lo que has pasado"
+
+        End If
+        Return Me.errorFMC
+    End Function
 
     Public Function ValidaRangoMañanaHasta1Mes(ByRef RV As Object) As String
         'pre:
@@ -128,8 +159,10 @@
     Public Function FormateaValidationSumary(vs As Object) As String
         If compruebaEsObjetoCalendario(vs) Then
             'Dim v As New ValidationSummary
-      
+
             vs.DisplayMode = ValidationSummaryDisplayMode.BulletList
+        Else
+            Me.errorFMC = "no has pasado un validationSumary"
         End If
         Return Me.errorFMC
     End Function
@@ -192,7 +225,7 @@
 
     Private Function compruebaEsObjetoTextBox(txtb As Object) As Boolean
         Dim tip As Type
-        Dim tipo = " System.Web.UI.WebControls.TextBox"
+        Dim tipo = "System.Web.UI.WebControls.TextBox"
         'Dim tipo As New TextBox
         tip = txtb.GetType()
         Return (String.Compare(tip.ToString, tipo) = 0)
@@ -200,7 +233,15 @@
 
     Private Function compruebaEsObjetoValidationSummary(txtb As Object) As Boolean
         Dim tip As Type
-        Dim tipo = " System.Web.UI.WebControls.ValidationSummary"
+        Dim tipo = "System.Web.UI.WebControls.ValidationSummary"
+        'Dim tipo As New ValidationSummary
+        tip = txtb.GetType()
+        Return (String.Compare(tip.ToString, tipo) = 0)
+    End Function
+
+    Private Function compruebaEsObjetoButton(txtb As Object) As Boolean
+        Dim tip As Type
+        Dim tipo = "System.Web.UI.WebControls.Button"
         'Dim tipo As New ValidationSummary
         tip = txtb.GetType()
         Return (String.Compare(tip.ToString, tipo) = 0)
@@ -226,5 +267,15 @@
     'y en el metodo Application_Start
     'Ponemos:
     ' ValidationSettings.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None
+
+
+
+    '----------------------
+    'si queries mostrar error en tiempo ejecucion crea una variable publica ErrorFmc en el *.aspx.vb
+    'descarga el en ella el resultado de cualquier funcion de esta clase
+    'pegando abajo esto:
+    'If Not String.Compare(ErrorFMC, "") Then
+    '      Response.Write(ErrorFMC)
+    '  End If
 End Class
 
